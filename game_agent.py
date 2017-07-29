@@ -225,7 +225,7 @@ class MinimaxPlayer(IsolationPlayer):
         best_score = float("-inf")
         best_move = None
         for move in game.get_legal_moves():
-            v = self.min_value(game.forecast_move(move), depth)
+            v = self.min_value(game.forecast_move(move), depth - 1)
             if v > best_score:
                 best_score = v
                 best_move = move
@@ -240,10 +240,6 @@ class MinimaxPlayer(IsolationPlayer):
             return self.score(game, game.active_player)
 
         v = float("-inf")
-        if (depth == 1):
-            for move in game.get_legal_moves():
-                v = min(v, self.score(game.forecast_move(move), self))
-            return v
 
         for move in game.get_legal_moves():
             v = max(v, self.min_value(game.forecast_move(move), depth - 1))
@@ -257,10 +253,6 @@ class MinimaxPlayer(IsolationPlayer):
             return self.score(game, game.inactive_player)
 
         v = float("inf")
-        if (depth == 1):
-            for move in game.get_legal_moves():
-                v = max(v, self.score(game.forecast_move(move), self))
-            return v
 
         for move in game.get_legal_moves():
             v = min(v, self.max_value(game.forecast_move(move), depth - 1))

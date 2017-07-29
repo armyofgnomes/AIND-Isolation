@@ -24,9 +24,9 @@ class IsolationTest(unittest.TestCase):
 
     def test_minimax(self):
         move_start = self.time_millis()
-        time_limit = 1500
+        time_limit = 5000
         time_left = lambda : time_limit - (self.time_millis() - move_start)
-        self.assertEqual(self.player1.get_move(self.game, time_left), (0, 1))
+        self.assertEqual(self.player1.get_move(self.game, time_left), (0, 0))
 
 
 

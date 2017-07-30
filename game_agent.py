@@ -3,6 +3,7 @@ test your agent's strength against a set of known agents using tournament.py
 and include the results in your report.
 """
 import random
+import itertools
 
 
 class SearchTimeout(Exception):
@@ -43,7 +44,7 @@ def custom_score(game, player):
 
     own_moves = len(game.get_legal_moves(player))
     opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
-    return float(own_moves - opp_moves)
+    return float(1.5 * own_moves - opp_moves)
 
 def custom_score_2(game, player):
     """Calculate the heuristic value of a game state from the point of view
@@ -76,7 +77,7 @@ def custom_score_2(game, player):
 
     own_moves = len(game.get_legal_moves(player))
     opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
-    return float(own_moves - opp_moves)
+    return float(1.2 * own_moves - opp_moves)
 
 
 def custom_score_3(game, player):
@@ -110,7 +111,7 @@ def custom_score_3(game, player):
 
     own_moves = len(game.get_legal_moves(player))
     opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
-    return float(own_moves - opp_moves)
+    return float(2.0 * own_moves - opp_moves)
 
 
 class IsolationPlayer:
@@ -316,9 +317,8 @@ class AlphaBetaPlayer(IsolationPlayer):
         try:
             # The try/except block will automatically catch the exception
             # raised when the timer is about to expire.
-            while (time_left() > 0):
-                self.search_depth += 1
-                best_move = self.alphabeta(game, self.search_depth)
+            for depth in itertools.count(1, 1):
+                best_move = self.alphabeta(game, depth)
 
         except SearchTimeout:
             pass  # Handle any actions required after timeout as needed

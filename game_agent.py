@@ -35,7 +35,6 @@ def custom_score(game, player):
     float
         The heuristic value of the current game state to the specified player.
     """
-    #TODO: Change this
     if game.is_winner(player):
         return float("inf")
 
@@ -44,7 +43,8 @@ def custom_score(game, player):
 
     own_moves = len(game.get_legal_moves(player))
     opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
-    return float(1.5 * own_moves - opp_moves)
+    return float((1.5 * own_moves) - (0.5 * opp_moves))
+
 
 def custom_score_2(game, player):
     """Calculate the heuristic value of a game state from the point of view
@@ -68,7 +68,6 @@ def custom_score_2(game, player):
     float
         The heuristic value of the current game state to the specified player.
     """
-    #TODO: Change this
     if game.is_winner(player):
         return float("inf")
 
@@ -77,8 +76,7 @@ def custom_score_2(game, player):
 
     own_moves = len(game.get_legal_moves(player))
     opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
-    return float(1.2 * own_moves - opp_moves)
-
+    return float(1.5 * own_moves - opp_moves)
 
 def custom_score_3(game, player):
     """Calculate the heuristic value of a game state from the point of view
@@ -102,7 +100,6 @@ def custom_score_3(game, player):
     float
         The heuristic value of the current game state to the specified player.
     """
-    #TODO: Change this
     if game.is_winner(player):
         return float("inf")
 
@@ -111,7 +108,7 @@ def custom_score_3(game, player):
 
     own_moves = len(game.get_legal_moves(player))
     opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
-    return float(2.0 * own_moves - opp_moves)
+    return float(1.8 * own_moves - 0.8 * opp_moves)
 
 
 class IsolationPlayer:
@@ -190,6 +187,12 @@ class MinimaxPlayer(IsolationPlayer):
 
         except SearchTimeout:
             pass  # Handle any actions required after timeout as needed
+
+        legal_moves = game.get_legal_moves()
+        # See if we have any legal moves left, if so and
+        # we are going to forfeit, try one anyway
+        if (best_move == (-1, -1) and len(legal_moves) > 0):
+            best_move = legal_moves[0]
 
         # Return the best move from the last completed search iteration
         return best_move
@@ -323,6 +326,12 @@ class AlphaBetaPlayer(IsolationPlayer):
         except SearchTimeout:
             pass  # Handle any actions required after timeout as needed
 
+        legal_moves = game.get_legal_moves()
+        # See if we have any legal moves left, if so and
+        # we are going to forfeit, try one anyway
+        if (best_move == (-1, -1) and len(legal_moves) > 0):
+            best_move = legal_moves[0]
+
         # Return the best move from the last completed search iteration
         return best_move
 
@@ -376,7 +385,12 @@ class AlphaBetaPlayer(IsolationPlayer):
 
         best_score = float("-inf")
         best_move = (-1, -1)
-        for move in game.get_legal_moves():
+
+        moves = game.get_legal_moves()
+        if not moves:
+            return best_move
+
+        for move in moves:
             v = self.min_value(game.forecast_move(move), best_score, beta, depth - 1)
             if v > best_score:
                 best_score = v

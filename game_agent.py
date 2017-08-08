@@ -240,12 +240,19 @@ class MinimaxPlayer(IsolationPlayer):
             raise SearchTimeout()
 
         best_score = float("-inf")
-        best_move = None
+        best_move = (-1, -1)
         for move in game.get_legal_moves():
             v = self.min_value(game.forecast_move(move), depth - 1)
             if v > best_score:
                 best_score = v
                 best_move = move
+
+        legal_moves = game.get_legal_moves()
+        # See if we have any legal moves left, if so and
+        # we are going to forfeit, try one anyway
+        if (best_move == (-1, -1) and len(legal_moves) > 0):
+            best_move = legal_moves[0]
+
         return best_move
 
 
@@ -395,6 +402,12 @@ class AlphaBetaPlayer(IsolationPlayer):
             if v > best_score:
                 best_score = v
                 best_move = move
+
+        # See if we have any legal moves left, if so and
+        # we are going to forfeit, try one anyway
+        if (best_move == (-1, -1) and len(moves) > 0):
+            best_move = moves[0]
+
         return best_move
 
     def max_value(self, game, alpha, beta, depth):

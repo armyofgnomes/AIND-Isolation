@@ -41,10 +41,12 @@ def custom_score(game, player):
     if game.is_loser(player):
         return float("-inf")
 
-    own_moves = len(game.get_legal_moves(player))
-    opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
-    return float((1.5 * own_moves) - (0.5 * opp_moves))
+    own_moves = game.get_legal_moves(player)
+    opp_moves = game.get_legal_moves(game.get_opponent(player))
+    own_total_moves = sum([len(game._Board__get_moves(move)) for move in own_moves])
+    opp_total_moves = sum([len(game._Board__get_moves(move)) for move in opp_moves])
 
+    return float(own_total_moves - opp_total_moves + len(own_moves) - len(opp_moves))
 
 def custom_score_2(game, player):
     """Calculate the heuristic value of a game state from the point of view
@@ -76,7 +78,8 @@ def custom_score_2(game, player):
 
     own_moves = len(game.get_legal_moves(player))
     opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
-    return float(1.5 * own_moves - opp_moves)
+
+    return float(1.5 * own_moves - 0.5 * opp_moves)
 
 def custom_score_3(game, player):
     """Calculate the heuristic value of a game state from the point of view
@@ -108,7 +111,11 @@ def custom_score_3(game, player):
 
     own_moves = len(game.get_legal_moves(player))
     opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
-    return float(1.8 * own_moves - 0.8 * opp_moves)
+
+    if len(game.get_blank_spaces()) > 6:
+        return float(own_moves - opp_moves)
+    else:
+        return float(own_moves)
 
 
 class IsolationPlayer:
